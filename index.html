@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Our Dates">
+    <title>Our Dates ❤️</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #ffeef8 0%, #ffe0f0 100%);
+            min-height: 100vh;
+            padding: 20px;
+            padding-bottom: 80px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            color: #8B0000;
+            margin-top: 10px;
+        }
+
+        .emoji {
+            font-size: 3em;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .category-title {
+            text-align: center;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .category-btn {
+            padding: 30px 20px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s;
+            font-family: 'Georgia', serif;
+        }
+
+        .category-btn:active {
+            transform: scale(0.95);
+        }
+
+        .category-btn.dnevni { background-color: #E63946; }
+        .category-btn.vikend { background-color: #FF69B4; }
+        .category-btn.mjesecni { background-color: #C77DFF; }
+        .category-btn.godisnji { background-color: #8B0000; }
+
+        .flip-container {
+            perspective: 1000px;
+            margin: 40px auto;
+        }
+
+        .flip-card {
+            width: 100%;
+            min-height: 300px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+        }
+
+        .flip-card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front,
+        .flip-card-back {
+            position: absolute;
+            width: 100%;
+            min-height: 300px;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .flip-card-front {
+            background: white;
+        }
+
+        .flip-card-back {
+            background: #fff9f9;
+            transform: rotateY(180deg);
+        }
+
+        .date-title {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .date-description {
+            font-size: 1.2em;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+            font-family: 'Georgia', serif;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .btn-accept {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-replace {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-back {
+            background-color: #dc3545;
+            color: white;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .upload-container {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .upload-title {
+            font-size: 1.5em;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .upload-options {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .upload-btn {
+            padding: 20px;
+            background: #E63946;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+        }
+
+        .upload-btn.secondary {
+            background: #FF69B4;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .preview-container {
+            margin: 20px 0;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .gallery-item {
+            aspect-ratio: 1;
+            overflow: hidden;
+            border-radius: 10px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-item-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 5px;
+            font-size: 0.7em;
+        }
+
+        .fullscreen-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .fullscreen-overlay.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .fullscreen-image {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 10px;
+        }
+
+        .fullscreen-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 1.5em;
+            cursor: pointer;
+        }
+
+        .stats-container {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            font-weight: bold;
+        }
+
+        .stat-value {
+            font-size: 1.2em;
+            color: #E63946;
+        }
+
+        .export-buttons {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 0.9em;
+            color: #666;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-btn.active {
+            color: #E63946;
+        }
+
+        .nav-icon {
+            font-size: 1.5em;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="emoji">❤️</div>
+            <h1>Our Dates</h1>
+        </div>
+
+        <!-- HOME SCREEN -->
+        <div id="homeScreen" class="screen active">
+            <div class="category-title">Odaberi kategoriju</div>
+            <div class="category-grid">
+                <button class="category-btn dnevni" onclick="selectCategory('DNEVNI')">Dnevni</button>
+                <button class="category-btn vikend" onclick="selectCategory('VIKEND')">Vikend</button>
+                <button class="category-btn mjesecni" onclick="selectCategory('MJESEČNI')">Mjesečni</button>
+                <button class="category-btn godisnji" onclick="selectCategory('GODIŠNJI')">Godišnji</button>
+            </div>
+        </div>
+
+        <!-- DATE CARD SCREEN -->
+        <div id="dateScreen" class="screen">
+            <div class="flip-container">
+                <div class="flip-card" id="flipCard" onclick="toggleFlip()">
+                    <div class="flip-card-front">
+                        <div class="date-title" id="dateTitle"></div>
+                        <p style="color: #999; margin-top: 20px;">👆 Klikni za opis</p>
+                    </div>
+                    <div class="flip-card-back">
+                        <div class="date-description" id="dateDescription"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-accept" onclick="acceptDate()">Prihvati</button>
+                <button class="btn btn-replace" onclick="replaceDate()">Zamijeni</button>
+            </div>
+            <button class="btn btn-back" onclick="goToHome()">Natrag</button>
+        </div>
+
+        <!-- UPLOAD SCREEN -->
+        <div id="uploadScreen" class="screen">
+            <div class="upload-container">
+                <div class="upload-title">Dodaj sliku</div>
+                <div class="upload-options">
+                    <button class="upload-btn" onclick="openCamera()">📷 Kamera</button>
+                    <button class="upload-btn secondary" onclick="openGallery()">🖼️ Galerija</button>
+                </div>
+                <input type="file" id="cameraInput" class="file-input" accept="image/*" capture="environment" onchange="handleImageUpload(event)">
+                <input type="file" id="galleryInput" class="file-input" accept="image/*" onchange="handleImageUpload(event)">
+                <div class="preview-container" id="previewContainer"></div>
+                <button class="btn btn-back" onclick="cancelUpload()">Odustani</button>
+            </div>
+        </div>
+
+        <!-- GALLERY SCREEN -->
+        <div id="galleryScreen" class="screen">
+            <div class="category-title">Galerija</div>
+            <div class="gallery-grid" id="galleryGrid"></div>
+            <div class="empty-state" id="emptyGallery">
+                <div class="empty-state-icon">📷</div>
+                <p>Još nema slika.<br>Počnite dodavati dejtove!</p>
+            </div>
+        </div>
+
+        <!-- STATS SCREEN -->
+        <div id="statsScreen" class="screen">
+            <div class="category-title">Godišnja Statistika</div>
+            <div class="stats-container">
+                <div class="stat-item">
+                    <span class="stat-label">Ukupno odrađeno:</span>
+                    <span class="stat-value" id="totalCompleted">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Dnevni:</span>
+                    <span class="stat-value" id="dnevniCompleted">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Vikend:</span>
+                    <span class="stat-value" id="vikendCompleted">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Mjesečni:</span>
+                    <span class="stat-value" id="mjesecniCompleted">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Godišnji:</span>
+                    <span class="stat-value" id="godisnjiCompleted">0</span>
+                </div>
+            </div>
+            <div class="export-buttons">
+                <button class="btn btn-accept" onclick="exportJSON()">💾 Preuzmi Backup (JSON)</button>
+                <button class="btn btn-replace" onclick="exportZIP()">📦 Preuzmi Sve Slike (ZIP)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FULLSCREEN IMAGE OVERLAY -->
+    <div class="fullscreen-overlay" id="fullscreenOverlay">
+        <button class="fullscreen-close" onclick="closeFullscreen()">✕</button>
+        <img class="fullscreen-image" id="fullscreenImage" src="">
+    </div>
+
+    <!-- BOTTOM NAVIGATION -->
+    <div class="bottom-nav">
+        <button class="nav-btn active" onclick="showScreen('home')">
+            <span class="nav-icon">🏠</span>
+            <span>Home</span>
+        </button>
+        <button class="nav-btn" onclick="showScreen('gallery')">
+            <span class="nav-icon">📷</span>
+            <span>Galerija</span>
+        </button>
+        <button class="nav-btn" onclick="showScreen('stats')">
+            <span class="nav-icon">📊</span>
+            <span>Statistika</span>
+        </button>
+    </div>
+
+    <script>
+        // DATA
+        const DATES_DATA = {
+  "dejtovi": [
+    {
+      "id": 1,
+      "kategorija": "DNEVNI",
+      "naziv": "GRABAR",
+      "opis": "Prošećite do Grabara na sladoled/kolač",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 2,
+      "kategorija": "DNEVNI",
+      "naziv": "POLUPANSION",
+      "opis": "Napravite si doručak u krevetu",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 3,
+      "kategorija": "DNEVNI",
+      "naziv": "KOLAČI",
+      "opis": "Napravite svako svoju vrstu kolača",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 4,
+      "kategorija": "DNEVNI",
+      "naziv": "QUIZ",
+      "opis": "Odigrajte neki ljubavni kviz jedno o drugome",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 5,
+      "kategorija": "DNEVNI",
+      "naziv": "LOVE LETTER",
+      "opis": "Napišite si ljubavno pismo",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 6,
+      "kategorija": "DNEVNI",
+      "naziv": "PIKNIK",
+      "opis": "Uzmite Yodu, dekice i grickalice",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 7,
+      "kategorija": "DNEVNI",
+      "naziv": "DRUŠTVENA IGRA",
+      "opis": "Kupite novu društvenu igru i igrajte barem sat vremena",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 8,
+      "kategorija": "DNEVNI",
+      "naziv": "VIDIKOVAC",
+      "opis": "Odite do nekog vidikovca (Sljeme, Tepec, Glavica…)",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 9,
+      "kategorija": "DNEVNI",
+      "naziv": "TUĐA KUHINJA",
+      "opis": "Skuhajte tradicionalno jelo neke random države",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 10,
+      "kategorija": "DNEVNI",
+      "naziv": "PUZZLE",
+      "opis": "Kupite i složite puzzle",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 11,
+      "kategorija": "DNEVNI",
+      "naziv": "CRTIĆ",
+      "opis": "Odgledajte neki sinkronizirani film",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 12,
+      "kategorija": "DNEVNI",
+      "naziv": "SPA",
+      "opis": "Organizirajte SPA večer u kupaoni sa svijećama, maskama za lice itd.",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 13,
+      "kategorija": "DNEVNI",
+      "naziv": "HOT HOT",
+      "opis": "Sredite se jedno za drugo",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 14,
+      "kategorija": "DNEVNI",
+      "naziv": "DVORAC",
+      "opis": "Složite dvorac u dnevnom boravku s dekama i jastucima",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 15,
+      "kategorija": "DNEVNI",
+      "naziv": "CUBE",
+      "opis": "Prošećite do Cubea na kavu, koktel ili sok",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 16,
+      "kategorija": "DNEVNI",
+      "naziv": "COCKTAIL",
+      "opis": "Složite si svoj koktel doma, može i bezalkoholni",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 17,
+      "kategorija": "DNEVNI",
+      "naziv": "ZALAZAK",
+      "opis": "Pred zalazak pustite što radite i uživajte u pogledu",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 18,
+      "kategorija": "DNEVNI",
+      "naziv": "EARLY BIRD GETS THE WORM",
+      "opis": "Probudite se ranije i popijte kavu skupa",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 19,
+      "kategorija": "DNEVNI",
+      "naziv": "YOGA",
+      "opis": "Odradite yogu skupa",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 20,
+      "kategorija": "DNEVNI",
+      "naziv": "SING",
+      "opis": "Pjevajte karaoke ili neki kviz",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 21,
+      "kategorija": "DNEVNI",
+      "naziv": "COLORFULL",
+      "opis": "Obojajte svako po pola crteža i spojite u jedan",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 22,
+      "kategorija": "DNEVNI",
+      "naziv": "GAMING",
+      "opis": "Odigrajte sat vremena neke igrice skupa",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 23,
+      "kategorija": "DNEVNI",
+      "naziv": "RASTA",
+      "opis": "Kupite novu biljku i podijelite brigu o njoj",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 24,
+      "kategorija": "DNEVNI",
+      "naziv": "KLARA'S FAVOURITE",
+      "opis": "Izmasirajte jedno drugo 15minuta",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 25,
+      "kategorija": "DNEVNI",
+      "naziv": "LATE NIGHT",
+      "opis": "Sjednite u auto i provozajte se pola sata po noći",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 26,
+      "kategorija": "DNEVNI",
+      "naziv": "FANTASY",
+      "opis": "Napravite svoje zmajeve i isprobajte",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 27,
+      "kategorija": "DNEVNI",
+      "naziv": "DANCE BABY",
+      "opis": "Odradite plesni tutorial s youtubea",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 28,
+      "kategorija": "DNEVNI",
+      "naziv": "NOSTALGIJA",
+      "opis": "Prisjetite se starih događanja, slika i zahvalite se na tome gdje ste sada",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 29,
+      "kategorija": "DNEVNI",
+      "naziv": "ORIGAMI",
+      "opis": "Napravite origami",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 30,
+      "kategorija": "DNEVNI",
+      "naziv": "FLY AWAY",
+      "opis": "Napravite papirnate avione i natjecanje od 3 runde koji će dalje letjeti",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 31,
+      "kategorija": "DNEVNI",
+      "naziv": "PHOTO BOMB",
+      "opis": "Napravite photo session jedno drugog, barem 5 slika",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 32,
+      "kategorija": "VIKEND",
+      "naziv": "IZLET",
+      "opis": "Prošećite po obližnjem gradu Sam/Zap/Vg…",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 33,
+      "kategorija": "VIKEND",
+      "naziv": "NEDJELJA",
+      "opis": "Posjetite Klarine roditelje ko i svaku nedjelju kad nemate što jest",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 34,
+      "kategorija": "VIKEND",
+      "naziv": "TOO MUCH PEOPLE",
+      "opis": "Posjetite Josipove roditelje",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 35,
+      "kategorija": "VIKEND",
+      "naziv": "FRENDAĆI",
+      "opis": "Odite do Tine i Maria",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 36,
+      "kategorija": "VIKEND",
+      "naziv": "MOVIE NIGHT",
+      "opis": "Napravite filmski maraton (Preporuka: Neil Breen)",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 37,
+      "kategorija": "VIKEND",
+      "naziv": "SERIES NIGHT",
+      "opis": "Bingeajte limitiranu seriju u jednom danu",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 38,
+      "kategorija": "VIKEND",
+      "naziv": "NO STOPING",
+      "opis": "Prošećite 10 000 koraka u danu",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 39,
+      "kategorija": "VIKEND",
+      "naziv": "SLAŽEM EGO KAO LEGO",
+      "opis": "Kupite i složite lego kocke",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 40,
+      "kategorija": "VIKEND",
+      "naziv": "RESTAČ",
+      "opis": "Odite u neki restoran na večeru",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 41,
+      "kategorija": "VIKEND",
+      "naziv": "CAW",
+      "opis": "Uplatite clay and wine",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 42,
+      "kategorija": "VIKEND",
+      "naziv": "LEVI",
+      "opis": "Odgledajte neki kratki anime",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 43,
+      "kategorija": "VIKEND",
+      "naziv": "CINESTAR",
+      "opis": "Odite u kino odgledat neki film",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 44,
+      "kategorija": "VIKEND",
+      "naziv": "BOWLING",
+      "opis": "Odite na kuglanje",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 45,
+      "kategorija": "VIKEND",
+      "naziv": "BOORIIING",
+      "opis": "Odite u muzej",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 46,
+      "kategorija": "VIKEND",
+      "naziv": "PAW",
+      "opis": "Uplatite paint and wine",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 47,
+      "kategorija": "MJESEČNI",
+      "naziv": "EWW IT'S RAW",
+      "opis": "Odite na sushi",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 48,
+      "kategorija": "MJESEČNI",
+      "naziv": "TOPLICE",
+      "opis": "Odite u toplice na jedan dan",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 49,
+      "kategorija": "MJESEČNI",
+      "naziv": "VECNA'S MIND",
+      "opis": "Odite u escape room",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 50,
+      "kategorija": "MJESEČNI",
+      "naziv": "NP",
+      "opis": "Odite u neki nacionalni park",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 51,
+      "kategorija": "MJESEČNI",
+      "naziv": "PIZZA",
+      "opis": "Uplatite si tečaj izrade pizze",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 52,
+      "kategorija": "MJESEČNI",
+      "naziv": "BAMBI",
+      "opis": "Posjetite dolinu jelena",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 53,
+      "kategorija": "MJESEČNI",
+      "naziv": "HAWK TUAH",
+      "opis": "Posjetite ranch alpaka",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 54,
+      "kategorija": "MJESEČNI",
+      "naziv": "STAND UP",
+      "opis": "Uplatite si neki stand up nastup",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 55,
+      "kategorija": "MJESEČNI",
+      "naziv": "OBRAZOVANJE",
+      "opis": "Odite u kazalište",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 56,
+      "kategorija": "MJESEČNI",
+      "naziv": "ZASLUŽILI SMO",
+      "opis": "Odmorite se jedan vikend na nekom mjestu",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 57,
+      "kategorija": "GODIŠNJI",
+      "naziv": "TRESU MI SE GAĆE",
+      "opis": "Uplatite si let balonom na vrući zrak",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 58,
+      "kategorija": "GODIŠNJI",
+      "naziv": "PASTA",
+      "opis": "Odvezite se do Italije po pizzu i vratite natrag",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 59,
+      "kategorija": "GODIŠNJI",
+      "naziv": "ONE STAR",
+      "opis": "Odite u restoran s Michelin zvjezdicom",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    },
+    {
+      "id": 60,
+      "kategorija": "GODIŠNJI",
+      "naziv": "SIĐI DOLJE",
+      "opis": "Uplatite si kućicu na drvetu",
+      "odradjen": false,
+      "datumOdradjivanja": null,
+      "slikaPath": null
+    }
+  ]
+};
+
+        // STATE
+        let currentCategory = null;
+        let currentDate = null;
+        let currentScreen = 'home';
+        let selectedImage = null;
+
+        // IndexedDB setup
+        let db;
+        const DB_NAME = 'OurDatesDB';
+        const DB_VERSION = 1;
+
+        function initDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => {
+                    db = request.result;
+                    resolve(db);
+                };
+
+                request.onupgradeneeded = (event) => {
+                    const db = event.target.result;
+                    if (!db.objectStoreNames.contains('dates')) {
+                        db.createObjectStore('dates', { keyPath: 'id' });
+                    }
+                    if (!db.objectStoreNames.contains('images')) {
+                        db.createObjectStore('images', { keyPath: 'dateId' });
+                    }
+                };
+            });
+        }
+
+        async function loadState() {
+            if (!db) await initDB();
+
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction(['dates'], 'readonly');
+                const store = transaction.objectStore('dates');
+                const request = store.getAll();
+
+                request.onsuccess = () => {
+                    const savedDates = request.result;
+                    if (savedDates.length > 0) {
+                        savedDates.forEach(savedDate => {
+                            const date = DATES_DATA.dejtovi.find(d => d.id === savedDate.id);
+                            if (date) {
+                                date.odradjen = savedDate.odradjen;
+                                date.datumOdradjivanja = savedDate.datumOdradjivanja;
+                                date.slikaPath = savedDate.slikaPath;
+                            }
+                        });
+                    }
+                    resolve();
+                };
+
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function saveDate(date) {
+            if (!db) await initDB();
+
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction(['dates'], 'readwrite');
+                const store = transaction.objectStore('dates');
+                const request = store.put(date);
+
+                request.onsuccess = () => resolve();
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function saveImage(dateId, imageBlob) {
+            if (!db) await initDB();
+
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction(['images'], 'readwrite');
+                const store = transaction.objectStore('images');
+                const request = store.put({ dateId, imageBlob });
+
+                request.onsuccess = () => resolve();
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function getImage(dateId) {
+            if (!db) await initDB();
+
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction(['images'], 'readonly');
+                const store = transaction.objectStore('images');
+                const request = store.get(dateId);
+
+                request.onsuccess = () => {
+                    if (request.result) {
+                        resolve(request.result.imageBlob);
+                    } else {
+                        resolve(null);
+                    }
+                };
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function getAllImages() {
+            if (!db) await initDB();
+
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction(['images'], 'readonly');
+                const store = transaction.objectStore('images');
+                const request = store.getAll();
+
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        // NAVIGATION
+        function showScreen(screen) {
+            currentScreen = screen;
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+
+            if (screen === 'home') {
+                document.getElementById('homeScreen').classList.add('active');
+                document.querySelector('.nav-btn:nth-child(1)').classList.add('active');
+            } else if (screen === 'gallery') {
+                document.getElementById('galleryScreen').classList.add('active');
+                document.querySelector('.nav-btn:nth-child(2)').classList.add('active');
+                loadGallery();
+            } else if (screen === 'stats') {
+                document.getElementById('statsScreen').classList.add('active');
+                document.querySelector('.nav-btn:nth-child(3)').classList.add('active');
+                loadStats();
+            }
+        }
+
+        function goToHome() {
+            currentDate = null;
+            currentCategory = null;
+            showScreen('home');
+        }
+
+        // CATEGORY SELECTION
+        function selectCategory(category) {
+            currentCategory = category;
+            loadRandomDate();
+        }
+
+        function loadRandomDate() {
+            const availableDates = DATES_DATA.dejtovi.filter(d => 
+                d.kategorija === currentCategory && !d.odradjen
+            );
+
+            if (availableDates.length === 0) {
+                alert('Svi dejtovi iz ove kategorije su već odrađeni! 🎉');
+                goToHome();
+                return;
+            }
+
+            const randomIndex = Math.floor(Math.random() * availableDates.length);
+            currentDate = availableDates[randomIndex];
+
+            document.getElementById('dateTitle').textContent = currentDate.naziv;
+            document.getElementById('dateDescription').textContent = currentDate.opis;
+            document.getElementById('flipCard').classList.remove('flipped');
+
+            document.getElementById('dateScreen').classList.add('active');
+            document.getElementById('homeScreen').classList.remove('active');
+        }
+
+        function toggleFlip() {
+            document.getElementById('flipCard').classList.toggle('flipped');
+        }
+
+        function acceptDate() {
+            document.getElementById('dateScreen').classList.remove('active');
+            document.getElementById('uploadScreen').classList.add('active');
+        }
+
+        function replaceDate() {
+            loadRandomDate();
+        }
+
+        // IMAGE UPLOAD
+        function openCamera() {
+            document.getElementById('cameraInput').click();
+        }
+
+        function openGallery() {
+            document.getElementById('galleryInput').click();
+        }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            selectedImage = file;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const previewContainer = document.getElementById('previewContainer');
+                previewContainer.innerHTML = `
+                    <img src="${e.target.result}" class="preview-image">
+                    <button class="btn btn-accept" style="width: 100%; margin-top: 20px;" onclick="confirmUpload()">
+                        Potvrdi i Spremi
+                    </button>
+                `;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function confirmUpload() {
+            if (!selectedImage || !currentDate) return;
+
+            currentDate.odradjen = true;
+            currentDate.datumOdradjivanja = new Date().toISOString();
+            currentDate.slikaPath = `date_${currentDate.id}`;
+
+            await saveDate(currentDate);
+            await saveImage(currentDate.id, selectedImage);
+
+            selectedImage = null;
+            document.getElementById('previewContainer').innerHTML = '';
+            document.getElementById('cameraInput').value = '';
+            document.getElementById('galleryInput').value = '';
+
+            alert('Dejt uspješno odrađen! 🎉');
+            goToHome();
+        }
+
+        function cancelUpload() {
+            selectedImage = null;
+            document.getElementById('previewContainer').innerHTML = '';
+            document.getElementById('cameraInput').value = '';
+            document.getElementById('galleryInput').value = '';
+            document.getElementById('uploadScreen').classList.remove('active');
+            document.getElementById('dateScreen').classList.add('active');
+        }
+
+        // GALLERY
+        async function loadGallery() {
+            const completedDates = DATES_DATA.dejtovi.filter(d => d.odradjen)
+                .sort((a, b) => new Date(b.datumOdradjivanja) - new Date(a.datumOdradjivanja));
+
+            const galleryGrid = document.getElementById('galleryGrid');
+            const emptyState = document.getElementById('emptyGallery');
+
+            if (completedDates.length === 0) {
+                galleryGrid.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            galleryGrid.innerHTML = '';
+
+            for (const date of completedDates) {
+                const imageBlob = await getImage(date.id);
+                if (imageBlob) {
+                    const imageUrl = URL.createObjectURL(imageBlob);
+                    const dateObj = new Date(date.datumOdradjivanja);
+                    const formattedDate = dateObj.toLocaleDateString('hr-HR');
+
+                    const item = document.createElement('div');
+                    item.className = 'gallery-item';
+                    item.innerHTML = `
+                        <img src="${imageUrl}" alt="${date.naziv}">
+                        <div class="gallery-item-info">
+                            ${date.naziv}<br>${formattedDate}
+                        </div>
+                    `;
+                    item.onclick = () => showFullscreen(imageUrl);
+                    galleryGrid.appendChild(item);
+                }
+            }
+        }
+
+        function showFullscreen(imageUrl) {
+            document.getElementById('fullscreenImage').src = imageUrl;
+            document.getElementById('fullscreenOverlay').classList.add('active');
+        }
+
+        function closeFullscreen() {
+            document.getElementById('fullscreenOverlay').classList.remove('active');
+        }
+
+        // STATS
+        function loadStats() {
+            const completed = DATES_DATA.dejtovi.filter(d => d.odradjen);
+            const dnevni = completed.filter(d => d.kategorija === 'DNEVNI').length;
+            const vikend = completed.filter(d => d.kategorija === 'VIKEND').length;
+            const mjesecni = completed.filter(d => d.kategorija === 'MJESEČNI').length;
+            const godisnji = completed.filter(d => d.kategorija === 'GODIŠNJI').length;
+
+            document.getElementById('totalCompleted').textContent = completed.length;
+            document.getElementById('dnevniCompleted').textContent = dnevni;
+            document.getElementById('vikendCompleted').textContent = vikend;
+            document.getElementById('mjesecniCompleted').textContent = mjesecni;
+            document.getElementById('godisnjiCompleted').textContent = godisnji;
+        }
+
+        // EXPORT
+        function exportJSON() {
+            const exportData = {
+                exportDate: new Date().toISOString(),
+                dejtovi: DATES_DATA.dejtovi.map(d => ({
+                    id: d.id,
+                    kategorija: d.kategorija,
+                    naziv: d.naziv,
+                    opis: d.opis,
+                    odradjen: d.odradjen,
+                    datumOdradjivanja: d.datumOdradjivanja
+                }))
+            };
+
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `our-dates-backup-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        async function exportZIP() {
+            const completedDates = DATES_DATA.dejtovi.filter(d => d.odradjen);
+
+            if (completedDates.length === 0) {
+                alert('Nema slika za export!');
+                return;
+            }
+
+            const zip = new JSZip();
+
+            for (const date of completedDates) {
+                const imageBlob = await getImage(date.id);
+                if (imageBlob) {
+                    const dateStr = new Date(date.datumOdradjivanja).toISOString().split('T')[0];
+                    const filename = `${dateStr}_${date.kategorija}_${date.naziv}.jpg`;
+                    zip.file(filename, imageBlob);
+                }
+            }
+
+            const zipBlob = await zip.generateAsync({ type: 'blob' });
+            const url = URL.createObjectURL(zipBlob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `our-dates-images-${new Date().toISOString().split('T')[0]}.zip`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // INIT
+        window.addEventListener('load', async () => {
+            await initDB();
+            await loadState();
+            console.log('App loaded successfully!');
+        });
+
+        // SERVICE WORKER
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js')
+                .then(reg => console.log('Service Worker registered'))
+                .catch(err => console.log('Service Worker registration failed', err));
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</body>
+</html>
