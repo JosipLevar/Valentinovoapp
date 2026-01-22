@@ -38,6 +38,49 @@
         .screen.active { display: block; }
         .category-title { text-align: center; font-size: 1.5em; margin-bottom: 20px; color: #333; }
         .category-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
+        .active-dates-info {
+            background: linear-gradient(135deg, #fff9f9 0%, #ffe0f0 100%);
+            border: 2px solid #E63946;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .active-dates-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #E63946;
+            margin-bottom: 10px;
+        }
+        
+        .active-dates-list {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .upload-button {
+            background: linear-gradient(135deg, #FF69B4, #E63946);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: Georgia, serif;
+            user-select: none;
+            -webkit-user-select: none;
+            box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3);
+            transition: transform 0.2s, box-shadow 0.3s;
+        }
+        
+        .upload-button:active {
+            transform: scale(0.95);
+        }
+
         .category-btn {
             padding: 30px 20px;
             border: none;
@@ -368,6 +411,11 @@
         <!-- HOME SCREEN -->
         <div id="homeScreen" class="screen active">
             <div class="category-title">Odaberi kategoriju</div>
+            <div class="active-dates-info" id="activeDatesInfo" style="display: none;">
+                <div class="active-dates-title">🎯 Aktivni dejtovi</div>
+                <div class="active-dates-list" id="activeDatesList"></div>
+                <button class="upload-button" onclick="goToUpload()">📸 Upload Sliku</button>
+            </div>
             <div class="category-grid">
                 <button class="category-btn dnevni" id="dnevniBtn">Dnevni</button>
                 <button class="category-btn vikend" id="vikendBtn">Vikend</button>
@@ -734,12 +782,6 @@
             if (saved && Array.isArray(saved)) {
                 activeDejtovi = saved;
                 updateHomeScreenState();
-                
-                // Ako ima aktivnih, prebaci na upload screen
-                if (activeDejtovi.length > 0) {
-                    showScreen('home'); // Uvijek prikaži home prvo
-                    updateUploadScreenState();
-                }
             }
         }
 
@@ -852,31 +894,40 @@
             const mjesecniBtn = document.getElementById('mjesecniBtn');
             const godisnjiBtn = document.getElementById('godisnjiBtn');
             
-            // Provjeri ima li aktivnih dejtova
+            const activeDatesInfo = document.getElementById('activeDatesInfo');
+            const activeDatesList = document.getElementById('activeDatesList');
+            
             const hasActive = activeDejtovi.length > 0;
             const hasGodisnji = activeDejtovi.some(item => item.category === 'GODIŠNJI');
             const hasNonGodisnji = activeDejtovi.some(item => item.category !== 'GODIŠNJI');
             
-            // PRAVILO: Godišnji je uvijek otvoren dok nije odabran
+            // Prikaži info box ako ima aktivnih
+            if (hasActive) {
+                activeDatesInfo.style.display = 'block';
+                let listHTML = '';
+                activeDejtovi.forEach(item => {
+                    listHTML += `✨ <strong>${item.category}</strong>: ${item.date.naziv}<br>`;
+                });
+                activeDatesList.innerHTML = listHTML;
+            } else {
+                activeDatesInfo.style.display = 'none';
+            }
+            
             godisnjiBtn.disabled = hasGodisnji;
             
             if (!hasActive) {
-                // Nema aktivnih - sve otključano
                 dnevniBtn.disabled = false;
                 vikendBtn.disabled = false;
                 mjesecniBtn.disabled = false;
             } else if (hasGodisnji && !hasNonGodisnji) {
-                // Samo godišnji aktivan - možeš birati DNEVNI/VIKEND/MJESEČNI
                 dnevniBtn.disabled = false;
                 vikendBtn.disabled = false;
                 mjesecniBtn.disabled = false;
             } else if (hasNonGodisnji) {
-                // Imaš DNEVNI/VIKEND/MJESEČNI - sve zaključano osim godišnjeg ako nije odabran
                 dnevniBtn.disabled = true;
                 vikendBtn.disabled = true;
                 mjesecniBtn.disabled = true;
             } else if (activeDejtovi.length >= 2) {
-                // Već imaš 2 - sve zaključano
                 dnevniBtn.disabled = true;
                 vikendBtn.disabled = true;
                 mjesecniBtn.disabled = true;
@@ -962,13 +1013,14 @@
             await saveActiveDejtovi();
             updateHomeScreenState();
             
+            // Vrati se na home, NE na upload
             document.getElementById('dateScreen').classList.remove('active');
-            document.getElementById('uploadScreen').classList.add('active');
-            updateUploadScreenState();
+            document.getElementById('homeScreen').classList.add('active');
             
             currentDate = null;
             currentCategory = null;
         }
+
         
         function replaceDate() {
             selectCategory(currentCategory);
@@ -988,6 +1040,13 @@
                 document.getElementById('homeScreen').classList.add('active');
             }
         }
+
+        function goToUpload() {
+            document.getElementById('homeScreen').classList.remove('active');
+            document.getElementById('uploadScreen').classList.add('active');
+            updateUploadScreenState();
+        }
+
 
         // ===========================================
         // IMAGE UPLOAD
@@ -1059,12 +1118,13 @@
             
             if (activeDejtovi.length === 0) {
                 alert('Dejt uspješno odrađen! 🎉');
-                showScreen('home');
+                document.getElementById('uploadScreen').classList.remove('active');
+                document.getElementById('homeScreen').classList.add('active');
+                updateHomeScreenState();
             } else {
                 alert('Super! Sad uploadaj sliku za preostali dejt!');
                 updateUploadScreenState();
             }
-        }
 
         async function cancelUpload() {
             if (activeDejtovi.length === 1 && activeDejtovi[0].category === 'GODIŠNJI') {
@@ -1215,41 +1275,49 @@
         
         function setupEasterEgg3() {
             const godisnjiBtn = document.getElementById('godisnjiBtn');
+            let godisnjiHolding = false;
+            let godisnjiHoldTimer = null;
             
-            // Touch events za hold (3 sekunde)
             godisnjiBtn.addEventListener('touchstart', (e) => {
                 if (easterEggState[3]) return;
                 
-                isHolding = true;
-                holdTarget = 'godisnji';
+                godisnjiHolding = true;
                 godisnjiBtn.classList.add('holding');
                 
-                holdTimer = setTimeout(async () => {
+                godisnjiHoldTimer = setTimeout(async () => {
                     godisnjiBtn.classList.remove('holding');
                     document.getElementById('easterModal3').classList.add('active');
                     document.getElementById('secretCodeInput').value = '';
                     easterEggState['3_modalOpened'] = true;
                     await saveEasterEggProgress('3_modalOpened', true);
-                    isHolding = false;
-                    holdTarget = null;
+                    godisnjiHolding = false;
                 }, HOLD_DURATION_3S);
             }, {passive: true});
             
             godisnjiBtn.addEventListener('touchend', (e) => {
-                if (holdTarget === 'godisnji') {
-                    e.preventDefault(); // 👈 DODAJ!
-                    clearTimeout(holdTimer);
-                    godisnjiBtn.classList.remove('holding');
-                    
-                    const wasHolding = isHolding;
-                    isHolding = false;
-                    holdTarget = null;
-                    
-                    if (wasHolding && !godisnjiBtn.disabled) {
-                        setTimeout(() => selectCategory('GODIŠNJI'), 100);
-                    }
+                e.preventDefault();
+                
+                if (godisnjiHoldTimer) {
+                    clearTimeout(godisnjiHoldTimer);
+                    godisnjiHoldTimer = null;
+                }
+                
+                godisnjiBtn.classList.remove('holding');
+                
+                if (godisnjiHolding && !godisnjiBtn.disabled) {
+                    godisnjiHolding = false;
+                    selectCategory('GODIŠNJI');
+                } else {
+                    godisnjiHolding = false;
                 }
             });
+            
+            godisnjiBtn.addEventListener('click', (e) => {
+                if (!godisnjiBtn.disabled) {
+                    selectCategory('GODIŠNJI');
+                }
+            });
+        }
             
             // Fallback za desktop (mouse click)
             godisnjiBtn.addEventListener('click', (e) => {
@@ -1315,14 +1383,9 @@
             }
             window.navClick = function(destination) { 
                 addToNavSequence(destination); 
-                
-                // FIX: Ako imaš aktivne dejtove, home = upload
-                if (destination === 'home' && activeDejtovi.length > 0) {
-                    showScreen('upload');
-                } else {
-                    showScreen(destination);
-                }
+                showScreen(destination); 
             };
+
 
         }
 
