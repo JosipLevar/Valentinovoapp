@@ -41,6 +41,8 @@
 
         .emoji {
             font-size: 3em;
+            cursor: pointer;
+            user-select: none;
         }
 
         .screen {
@@ -375,18 +377,124 @@
             margin-bottom: 20px;
         }
 
-        .loading {
-            text-align: center;
+        /* Love Animation */
+        .love-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 9999;
+            display: none;
+        }
+
+        .love-overlay.active {
+            display: block;
+        }
+
+        .love-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px 50px;
+            border-radius: 20px;
+            font-size: 2em;
+            color: #E63946;
+            font-weight: bold;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: fadeInOut 3s ease-in-out;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 2em;
+            animation: floatUp 3s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+        }
+
+        @keyframes floatUp {
+            0% {
+                opacity: 1;
+                transform: translateY(0) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100vh) rotate(360deg);
+            }
+        }
+
+        /* Warning Modal */
+        .warning-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .warning-modal.active {
+            display: flex;
+        }
+
+        .warning-content {
+            background: white;
             padding: 40px;
-            font-size: 1.2em;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+        }
+
+        .warning-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .warning-text {
+            font-size: 1.3em;
+            color: #E63946;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .warning-subtext {
+            font-size: 1em;
             color: #666;
+            margin-bottom: 30px;
+        }
+
+        .warning-button {
+            background: #E63946;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <div class="emoji">❤️</div>
+            <div class="emoji" id="logoEmoji">❤️</div>
             <h1>Our Dates</h1>
         </div>
 
@@ -482,6 +590,21 @@
     <div class="fullscreen-overlay" id="fullscreenOverlay">
         <button class="fullscreen-close" onclick="closeFullscreen()">✕</button>
         <img class="fullscreen-image" id="fullscreenImage" src="">
+    </div>
+
+    <!-- LOVE ANIMATION OVERLAY -->
+    <div class="love-overlay" id="loveOverlay">
+        <div class="love-message">Toliko te volim ❤️</div>
+    </div>
+
+    <!-- WARNING MODAL -->
+    <div class="warning-modal" id="warningModal">
+        <div class="warning-content">
+            <div class="warning-icon">💔</div>
+            <div class="warning-text">Love energy depleting!</div>
+            <div class="warning-subtext">Prošlo je 7+ dana bez dejta.<br>Vrijeme je za novu avanturu!</div>
+            <button class="warning-button" onclick="closeWarning()">Idemo! 💕</button>
+        </div>
     </div>
 
     <!-- BOTTOM NAVIGATION -->
@@ -1053,6 +1176,10 @@
         let currentScreen = 'home';
         let selectedImage = null;
 
+        // TAP DETECTION
+        let tapCount = 0;
+        let tapTimer = null;
+
         // IndexedDB setup
         let db;
         const DB_NAME = 'OurDatesDB';
@@ -1075,6 +1202,9 @@
                     }
                     if (!db.objectStoreNames.contains('images')) {
                         db.createObjectStore('images', { keyPath: 'dateId' });
+                    }
+                    if (!db.objectStoreNames.contains('settings')) {
+                        db.createObjectStore('settings', { keyPath: 'key' });
                     }
                 };
             });
@@ -1163,6 +1293,145 @@
                 request.onsuccess = () => resolve(request.result);
                 request.onerror = () => reject(request.error);
             });
+        }
+
+        async function saveLastActiveDate() {
+            if (!db) await initDB();
+
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction(['settings'], 'readwrite');
+                const store = transaction.objectStore('settings');
+                const request = store.put({ 
+                    key: 'lastActiveDate', 
+                    value: new Date().toISOString() 
+                });
+
+                request.onsuccess = () => resolve();
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function getLastActiveDate() {
+            if (!db) await initDB();
+
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction(['settings'], 'readonly');
+                const store = transaction.objectStore('settings');
+                const request = store.get('lastActiveDate');
+
+                request.onsuccess = () => {
+                    if (request.result) {
+                        resolve(request.result.value);
+                    } else {
+                        resolve(null);
+                    }
+                };
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function checkInactivity() {
+            const completedDates = DATES_DATA.dejtovi.filter(d => d.odradjen);
+
+            if (completedDates.length === 0) {
+                return;
+            }
+
+            const sortedDates = completedDates.sort((a, b) => 
+                new Date(b.datumOdradjivanja) - new Date(a.datumOdradjivanja)
+            );
+
+            const lastDate = new Date(sortedDates[0].datumOdradjivanja);
+            const now = new Date();
+            const daysDiff = Math.floor((now - lastDate) / (1000 * 60 * 60 * 24));
+
+            if (daysDiff >= 7) {
+                document.getElementById('warningModal').classList.add('active');
+            }
+        }
+
+        function closeWarning() {
+            document.getElementById('warningModal').classList.remove('active');
+        }
+
+        // LOGO TAP DETECTION
+        document.getElementById('logoEmoji').addEventListener('click', function() {
+            tapCount++;
+
+            if (tapTimer) {
+                clearTimeout(tapTimer);
+            }
+
+            tapTimer = setTimeout(() => {
+                if (tapCount === 2) {
+                    triggerLoveAnimation();
+                } else if (tapCount === 3) {
+                    triggerReset();
+                }
+                tapCount = 0;
+            }, 500);
+        });
+
+        function triggerLoveAnimation() {
+            const overlay = document.getElementById('loveOverlay');
+            overlay.classList.add('active');
+
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    createHeart();
+                }, i * 150);
+            }
+
+            setTimeout(() => {
+                overlay.classList.remove('active');
+            }, 3000);
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.textContent = '💕';
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDuration = (2 + Math.random() * 2) + 's';
+
+            document.getElementById('loveOverlay').appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 4000);
+        }
+
+        function triggerReset() {
+            if (confirm('🔄 SECRET RESET\n\nOvo će obrisati sve podatke i slike!\n\nKoristiti samo za testiranje.\n\nSigurno želiš nastaviti?')) {
+                if (confirm('Stvarno sigurno? Ovo se ne može poništiti!')) {
+                    resetAllData();
+                }
+            }
+        }
+
+        async function resetAllData() {
+            if (!db) await initDB();
+
+            const transaction = db.transaction(['dates', 'images', 'settings'], 'readwrite');
+
+            const datesStore = transaction.objectStore('dates');
+            const imagesStore = transaction.objectStore('images');
+            const settingsStore = transaction.objectStore('settings');
+
+            datesStore.clear();
+            imagesStore.clear();
+            settingsStore.clear();
+
+            DATES_DATA.dejtovi.forEach(date => {
+                date.odradjen = false;
+                date.datumOdradjivanja = null;
+                date.slikaPath = null;
+            });
+
+            transaction.oncomplete = () => {
+                alert('✅ Reset uspješan!\n\nSvi podaci su obrisani.');
+                location.reload();
+            };
         }
 
         // NAVIGATION
@@ -1269,6 +1538,7 @@
 
             await saveDate(currentDate);
             await saveImage(currentDate.id, selectedImage);
+            await saveLastActiveDate();
 
             selectedImage = null;
             document.getElementById('previewContainer').innerHTML = '';
@@ -1412,6 +1682,8 @@
         window.addEventListener('load', async () => {
             await initDB();
             await loadState();
+            await checkInactivity();
+            await saveLastActiveDate();
             console.log('App loaded successfully!');
         });
 
