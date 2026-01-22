@@ -1237,6 +1237,7 @@
             
             godisnjiBtn.addEventListener('touchend', (e) => {
                 if (holdTarget === 'godisnji') {
+                    e.preventDefault(); // 👈 DODAJ!
                     clearTimeout(holdTimer);
                     godisnjiBtn.classList.remove('holding');
                     
@@ -1244,12 +1245,11 @@
                     isHolding = false;
                     holdTarget = null;
                     
-                    // Ako nije bio hold, trigeruj normalan click
                     if (wasHolding && !godisnjiBtn.disabled) {
                         setTimeout(() => selectCategory('GODIŠNJI'), 100);
                     }
                 }
-            }, {passive: true});
+            });
             
             // Fallback za desktop (mouse click)
             godisnjiBtn.addEventListener('click', (e) => {
@@ -1313,7 +1313,17 @@
                     if (match) { navTapSequence = []; document.getElementById('easterModal2').classList.add('active'); }
                 }
             }
-            window.navClick = function(destination) { addToNavSequence(destination); showScreen(destination); };
+            window.navClick = function(destination) { 
+                addToNavSequence(destination); 
+                
+                // FIX: Ako imaš aktivne dejtove, home = upload
+                if (destination === 'home' && activeDejtovi.length > 0) {
+                    showScreen('upload');
+                } else {
+                    showScreen(destination);
+                }
+            };
+
         }
 
         function setupEasterEgg3() {
@@ -1477,6 +1487,10 @@
             if (screen === 'home') {
                 document.getElementById('homeScreen').classList.add('active');
                 document.querySelector('.nav-btn:nth-child(1)').classList.add('active');
+            } else if (screen === 'upload') {
+                document.getElementById('uploadScreen').classList.add('active');
+                document.querySelector('.nav-btn:nth-child(1)').classList.add('active');
+                updateUploadScreenState();
             } else if (screen === 'gallery') {
                 document.getElementById('galleryScreen').classList.add('active');
                 document.querySelector('.nav-btn:nth-child(2)').classList.add('active');
