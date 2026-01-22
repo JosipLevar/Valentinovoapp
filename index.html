@@ -9,6 +9,9 @@
     <title>Our Dates ❤️</title>
     <link rel="manifest" href="manifest.json">
     <style>
+        /* ===========================================
+           GLOBAL STYLES
+           =========================================== */
         * {
             margin: 0;
             padding: 0;
@@ -29,6 +32,9 @@
             margin: 0 auto;
         }
 
+        /* ===========================================
+           HEADER STYLES
+           =========================================== */
         .header {
             text-align: center;
             margin-bottom: 30px;
@@ -85,6 +91,9 @@
             }
         }
 
+        /* ===========================================
+           SCREEN MANAGEMENT
+           =========================================== */
         .screen {
             display: none;
         }
@@ -93,6 +102,9 @@
             display: block;
         }
 
+        /* ===========================================
+           CATEGORY SELECTION STYLES
+           =========================================== */
         .category-title {
             text-align: center;
             font-size: 1.5em;
@@ -130,15 +142,33 @@
         }
 
         @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 0 20px rgba(255,255,255,0.6); }
-            50% { box-shadow: 0 0 30px rgba(255,255,255,0.9); }
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(255,255,255,0.6);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(255,255,255,0.9);
+            }
         }
 
-        .category-btn.dnevni { background-color: #E63946; }
-        .category-btn.vikend { background-color: #FF69B4; }
-        .category-btn.mjesecni { background-color: #C77DFF; }
-        .category-btn.godisnji { background-color: #8B0000; }
+        .category-btn.dnevni {
+            background-color: #E63946;
+        }
 
+        .category-btn.vikend {
+            background-color: #FF69B4;
+        }
+
+        .category-btn.mjesecni {
+            background-color: #C77DFF;
+        }
+
+        .category-btn.godisnji {
+            background-color: #8B0000;
+        }
+
+        /* ===========================================
+           FLIP CARD STYLES
+           =========================================== */
         .flip-container {
             perspective: 1000px;
             margin: 40px auto;
@@ -194,6 +224,9 @@
             color: #333;
         }
 
+        /* ===========================================
+           BUTTON STYLES
+           =========================================== */
         .action-buttons {
             display: flex;
             gap: 15px;
@@ -233,6 +266,9 @@
             margin-top: 20px;
         }
 
+        /* ===========================================
+           UPLOAD SCREEN STYLES
+           =========================================== */
         .upload-container {
             text-align: center;
             padding: 40px 20px;
@@ -280,6 +316,9 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
+        /* ===========================================
+           GALLERY STYLES
+           =========================================== */
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -312,6 +351,9 @@
             font-size: 0.7em;
         }
 
+        /* ===========================================
+           FULLSCREEN OVERLAY
+           =========================================== */
         .fullscreen-overlay {
             display: none;
             position: fixed;
@@ -350,6 +392,9 @@
             cursor: pointer;
         }
 
+        /* ===========================================
+           STATISTICS STYLES
+           =========================================== */
         .stats-container {
             background: white;
             padding: 30px;
@@ -384,6 +429,9 @@
             gap: 15px;
         }
 
+        /* ===========================================
+           BOTTOM NAVIGATION
+           =========================================== */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -423,6 +471,9 @@
             font-size: 1.5em;
         }
 
+        /* ===========================================
+           EMPTY STATE
+           =========================================== */
         .empty-state {
             text-align: center;
             padding: 60px 20px;
@@ -434,7 +485,9 @@
             margin-bottom: 20px;
         }
 
-        /* Love Animation */
+        /* ===========================================
+           LOVE ANIMATION OVERLAY
+           =========================================== */
         .love-overlay {
             position: fixed;
             top: 0;
@@ -531,7 +584,9 @@
             }
         }
 
-        /* Easter Egg Modals */
+        /* ===========================================
+           EASTER EGG MODAL STYLES
+           =========================================== */
         .easter-modal {
             display: none;
             position: fixed;
@@ -606,7 +661,91 @@
             background: #6c757d;
         }
 
-        /* Warning Modal */
+        /* ===========================================
+           TRACKER MODAL STYLES
+           =========================================== */
+        .tracker-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 10002;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .tracker-modal.active {
+            display: flex;
+        }
+
+        .tracker-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+            animation: popIn 0.5s ease-out;
+        }
+
+        .tracker-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .tracker-title {
+            font-size: 1.3em;
+            color: #333;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .tracker-progress {
+            font-size: 2.5em;
+            color: #E63946;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .tracker-hint-section {
+            background: #fff9f9;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+
+        .tracker-hint-title {
+            font-size: 1em;
+            color: #E63946;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .tracker-hint-text {
+            font-size: 1.1em;
+            color: #666;
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+        .tracker-button {
+            background: #E63946;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+        }
+
+        /* ===========================================
+           WARNING MODAL STYLES
+           =========================================== */
         .warning-modal {
             display: none;
             position: fixed;
@@ -664,14 +803,19 @@
         }
     </style>
 </head>
-<body>
+<body>    <!-- ===========================================
+         MAIN CONTAINER
+         =========================================== -->
     <div class="container">
+        <!-- HEADER SECTION -->
         <div class="header">
             <div class="emoji locked" id="logoEmoji">❤️</div>
             <h1 id="appTitle">Our Dates</h1>
         </div>
 
-        <!-- HOME SCREEN -->
+        <!-- ===========================================
+             HOME SCREEN - Category Selection
+             =========================================== -->
         <div id="homeScreen" class="screen active">
             <div class="category-title">Odaberi kategoriju</div>
             <div class="category-grid">
@@ -682,7 +826,9 @@
             </div>
         </div>
 
-        <!-- DATE CARD SCREEN -->
+        <!-- ===========================================
+             DATE SCREEN - Flip Card
+             =========================================== -->
         <div id="dateScreen" class="screen">
             <div class="flip-container">
                 <div class="flip-card" id="flipCard" onclick="toggleFlip()">
@@ -702,7 +848,9 @@
             <button class="btn btn-back" onclick="goToHome()">Natrag</button>
         </div>
 
-        <!-- UPLOAD SCREEN -->
+        <!-- ===========================================
+             UPLOAD SCREEN - Image Upload
+             =========================================== -->
         <div id="uploadScreen" class="screen">
             <div class="upload-container">
                 <div class="upload-title">Dodaj sliku</div>
@@ -717,7 +865,9 @@
             </div>
         </div>
 
-        <!-- GALLERY SCREEN -->
+        <!-- ===========================================
+             GALLERY SCREEN - Photo Gallery
+             =========================================== -->
         <div id="galleryScreen" class="screen">
             <div class="category-title">Galerija</div>
             <div class="gallery-grid" id="galleryGrid"></div>
@@ -727,7 +877,9 @@
             </div>
         </div>
 
-        <!-- STATS SCREEN -->
+        <!-- ===========================================
+             STATS SCREEN - Statistics
+             =========================================== -->
         <div id="statsScreen" class="screen">
             <div class="category-title">Godišnja Statistika</div>
             <div class="stats-container">
@@ -759,13 +911,17 @@
         </div>
     </div>
 
-    <!-- FULLSCREEN IMAGE OVERLAY -->
+    <!-- ===========================================
+         FULLSCREEN IMAGE OVERLAY
+         =========================================== -->
     <div class="fullscreen-overlay" id="fullscreenOverlay">
         <button class="fullscreen-close" onclick="closeFullscreen()">✕</button>
         <img class="fullscreen-image" id="fullscreenImage" src="">
     </div>
 
-    <!-- LOVE ANIMATION OVERLAY -->
+    <!-- ===========================================
+         LOVE ANIMATION OVERLAY (Double Tap)
+         =========================================== -->
     <div class="love-overlay" id="loveOverlay">
         <div class="love-message-box">
             <div class="love-message-title">Tajna poruka:</div>
@@ -774,7 +930,9 @@
         </div>
     </div>
 
-    <!-- WARNING MODAL -->
+    <!-- ===========================================
+         WARNING MODAL (7+ Days Inactivity)
+         =========================================== -->
     <div class="warning-modal" id="warningModal">
         <div class="warning-content">
             <div class="warning-icon">💔</div>
@@ -784,7 +942,25 @@
         </div>
     </div>
 
-    <!-- EASTER EGG MODAL 1: MASAŽA -->
+    <!-- ===========================================
+         TRACKER MODAL (Opens on App Load)
+         =========================================== -->
+    <div class="tracker-modal" id="trackerModal">
+        <div class="tracker-content">
+            <div class="tracker-icon">🎁</div>
+            <div class="tracker-title">Ova aplikacija sadrži<br>tajne poruke/dejtove</div>
+            <div class="tracker-progress" id="trackerProgress">0/4</div>
+            <div class="tracker-hint-section" id="trackerHintSection">
+                <div class="tracker-hint-title" id="trackerHintTitle">🔍 Tajni Dejt #1</div>
+                <div class="tracker-hint-text" id="trackerHintText">Učitavam...</div>
+            </div>
+            <button class="tracker-button" onclick="closeTracker()">U redu! 💕</button>
+        </div>
+    </div>
+
+    <!-- ===========================================
+         EASTER EGG MODAL 1: MASAŽA (Hold 3s Dnevni)
+         =========================================== -->
     <div class="easter-modal" id="easterModal1">
         <div class="easter-content">
             <div class="easter-icon">💆‍♀️</div>
@@ -795,11 +971,13 @@
                 po tvom izboru!<br><br>
                 <strong>Trajanje: minimum 15 min</strong>
             </div>
-            <button class="easter-button" onclick="closeEasterModal('easterModal1')">Odlično! 💕</button>
+            <button class="easter-button" onclick="completeEasterEgg(1)">Odlično! 💕</button>
         </div>
     </div>
 
-    <!-- EASTER EGG MODAL 2: DORUČAK -->
+    <!-- ===========================================
+         EASTER EGG MODAL 2: DORUČAK (Nav Pattern)
+         =========================================== -->
     <div class="easter-modal" id="easterModal2">
         <div class="easter-content">
             <div class="easter-icon">🥐</div>
@@ -809,26 +987,30 @@
                 - Napraviti ti doručak u krevet<br>
                 - Uz to ljubavnu poruku
             </div>
-            <button class="easter-button" onclick="closeEasterModal('easterModal2')">Yay! ❤️</button>
+            <button class="easter-button" onclick="completeEasterEgg(2)">Yay! ❤️</button>
         </div>
     </div>
 
-    <!-- EASTER EGG MODAL 3: ŠIFRA -->
+    <!-- ===========================================
+         EASTER EGG MODAL 3: ŠIFRA INPUT (Hold 3s Godišnji)
+         =========================================== -->
     <div class="easter-modal" id="easterModal3">
         <div class="easter-content">
             <div class="easter-icon">🔐</div>
             <div class="easter-title">UPIŠI TAJNU ŠIFRU</div>
             <div class="easter-text">
-                Kada je počela naša priča?<br>
-                <small>(Format: DDMMYYYY)</small>
+                Zbrojite rođendane<br>
+                <small>(DDMM + DDMM)</small>
             </div>
-            <input type="text" class="easter-input" id="secretCodeInput" placeholder="19091998" maxlength="8">
+            <input type="text" class="easter-input" id="secretCodeInput" placeholder="****" maxlength="4">
             <button class="easter-button" onclick="checkSecretCode()">Potvrdi</button>
             <button class="easter-button secondary" onclick="closeEasterModal('easterModal3')">Odustani</button>
         </div>
     </div>
 
-    <!-- EASTER EGG MODAL 3 SUCCESS -->
+    <!-- ===========================================
+         EASTER EGG MODAL 3 SUCCESS: MASTER SECRET
+         =========================================== -->
     <div class="easter-modal" id="easterModal3Success">
         <div class="easter-content">
             <div class="easter-icon">❤️</div>
@@ -839,11 +1021,13 @@
                 bez ikakvih pitanja!<br><br>
                 <small>(Razumna želja, naravno 😉)</small>
             </div>
-            <button class="easter-button" onclick="closeEasterModal('easterModal3Success')">Perfect! 💖</button>
+            <button class="easter-button" onclick="completeEasterEgg(3)">Perfect! 💖</button>
         </div>
     </div>
 
-    <!-- EASTER EGG MODAL 4: MATH QUIZ -->
+    <!-- ===========================================
+         EASTER EGG MODAL 4: MATH QUIZ (Hold 5s Stats)
+         =========================================== -->
     <div class="easter-modal" id="easterModal4">
         <div class="easter-content">
             <div class="easter-icon">🧮</div>
@@ -860,7 +1044,9 @@
         </div>
     </div>
 
-    <!-- EASTER EGG MODAL 4 SUCCESS -->
+    <!-- ===========================================
+         EASTER EGG MODAL 4 SUCCESS: ROMANTIC BONUS
+         =========================================== -->
     <div class="easter-modal" id="easterModal4Success">
         <div class="easter-content">
             <div class="easter-icon">🌹</div>
@@ -871,17 +1057,19 @@
                 - U sljedećih 7 dana<br><br>
                 Sretno! 💕
             </div>
-            <button class="easter-button" onclick="closeEasterModal('easterModal4Success')">Jedva čekam! 😍</button>
+            <button class="easter-button" onclick="completeEasterEgg(4)">Jedva čekam! 😍</button>
         </div>
     </div>
 
-    <!-- BOTTOM NAVIGATION -->
+    <!-- ===========================================
+         BOTTOM NAVIGATION
+         =========================================== -->
     <div class="bottom-nav">
-        <button class="nav-btn active" onclick="showScreen('home')">
+        <button class="nav-btn active" id="homeNavBtn" onclick="navClick('home')">
             <span class="nav-icon">🏠</span>
             <span>Home</span>
         </button>
-        <button class="nav-btn" onclick="showScreen('gallery')">
+        <button class="nav-btn" id="galleryNavBtn" onclick="navClick('gallery')">
             <span class="nav-icon">📷</span>
             <span>Galerija</span>
         </button>
@@ -891,8 +1079,14 @@
         </button>
     </div>
 
+    <!-- ===========================================
+         JAVASCRIPT CODE START
+         =========================================== -->
     <script>
-        // DATA
+        // ===========================================
+        // DATA DEFINITIONS
+        // ===========================================
+
         const DATES_DATA = {
   "dejtovi": [
     {
@@ -1438,40 +1632,83 @@
   ]
 };
 
-        // STATE
+        // Easter Egg Hints Configuration
+        const EASTER_EGG_HINTS = {
+            1: {
+                title: "Tajni Dejt #1: Opuštanje",
+                hint: "Svaki DAN udahni i izdahni 3 sekunde"
+            },
+            2: {
+                title: "Tajni Dejt #2: Jutarnje Iznenađenje",
+                hint: "Brzo putuj kroz navigaciju"
+            },
+            3: {
+                stage1: {
+                    title: "Tajni Dejt #3: Master Secret",
+                    hint: "Treba mi godišnji"
+                },
+                stage2: {
+                    title: "Tajni Dejt #3: Master Secret",
+                    hint: "Što smo ja+ti"
+                }
+            },
+            4: {
+                title: "Tajni Dejt #4: Romantični Bonus",
+                hint: "STAni, TI Si Tako lijepa I oči su ti KAo čokolada, pojeo bih te u 5 sekundi"
+            }
+        };
+
+        // ===========================================
+        // STATE MANAGEMENT
+        // ===========================================
+
         let currentCategory = null;
         let currentDate = null;
         let currentScreen = 'home';
         let selectedImage = null;
         let secretDiscovered = false;
 
-        // TAP DETECTION FOR LOGO DOUBLE TAP
+        // Easter Egg State Tracking
+        let easterEggState = {
+            1: false, // Masaža
+            2: false, // Doručak
+            3: false, // Šifra
+            4: false, // Math
+            '3_modalOpened': false // Stage tracking for Easter Egg 3
+        };
+
+        // Double Tap Detection
         let tapCount = 0;
         let tapTimer = null;
 
-        // TAP PATTERN DETECTION (Logo-Title-Logo-Title)
-        let tapSequence = [];
-        let tapSequenceTimer = null;
-        const TAP_PATTERN = ['logo', 'title', 'logo', 'title'];
+        // Navigation Pattern Detection (Home-Gallery-Stats)
+        let navTapSequence = [];
+        let navTapSequenceTimer = null;
+        const NAV_TAP_PATTERN = ['home', 'gallery', 'stats'];
 
-        // HOLD DETECTION
+        // Hold Detection
         let holdTimer = null;
         let holdTarget = null;
-        const HOLD_DURATION = 3000;
+        const HOLD_DURATION_3S = 3000;
+        const HOLD_DURATION_5S = 5000;
 
-        // LOVE ANIMATION
+        // Love Animation
         let loveAnimationInterval = null;
 
-        // IndexedDB setup
+        // ===========================================
+        // INDEXEDDB SETUP AND OPERATIONS
+        // ===========================================
+
         let db;
         const DB_NAME = 'OurDatesDB';
-        const DB_VERSION = 1;
+        const DB_VERSION = 2;
 
         function initDB() {
             return new Promise((resolve, reject) => {
                 const request = indexedDB.open(DB_NAME, DB_VERSION);
 
                 request.onerror = () => reject(request.error);
+
                 request.onsuccess = () => {
                     db = request.result;
                     resolve(db);
@@ -1479,14 +1716,22 @@
 
                 request.onupgradeneeded = (event) => {
                     const db = event.target.result;
+
+                    // Create object stores if they don't exist
                     if (!db.objectStoreNames.contains('dates')) {
                         db.createObjectStore('dates', { keyPath: 'id' });
                     }
+
                     if (!db.objectStoreNames.contains('images')) {
                         db.createObjectStore('images', { keyPath: 'dateId' });
                     }
+
                     if (!db.objectStoreNames.contains('settings')) {
                         db.createObjectStore('settings', { keyPath: 'key' });
+                    }
+
+                    if (!db.objectStoreNames.contains('easterEggs')) {
+                        db.createObjectStore('easterEggs', { keyPath: 'id' });
                     }
                 };
             });
@@ -1502,6 +1747,7 @@
 
                 request.onsuccess = () => {
                     const savedDates = request.result;
+
                     if (savedDates.length > 0) {
                         savedDates.forEach(savedDate => {
                             const date = DATES_DATA.dejtovi.find(d => d.id === savedDate.id);
@@ -1512,9 +1758,43 @@
                             }
                         });
                     }
+
                     resolve();
                 };
 
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function loadEasterEggState() {
+            if (!db) await initDB();
+
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction(['easterEggs'], 'readonly');
+                const store = transaction.objectStore('easterEggs');
+                const request = store.getAll();
+
+                request.onsuccess = () => {
+                    const savedEggs = request.result;
+                    savedEggs.forEach(egg => {
+                        easterEggState[egg.id] = egg.completed;
+                    });
+                    resolve();
+                };
+
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function saveEasterEggProgress(id, completed) {
+            if (!db) await initDB();
+
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction(['easterEggs'], 'readwrite');
+                const store = transaction.objectStore('easterEggs');
+                const request = store.put({ id: String(id), completed });
+
+                request.onsuccess = () => resolve();
                 request.onerror = () => reject(request.error);
             });
         }
@@ -1560,19 +1840,7 @@
                         resolve(null);
                     }
                 };
-                request.onerror = () => reject(request.error);
-            });
-        }
 
-        async function getAllImages() {
-            if (!db) await initDB();
-
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction(['images'], 'readonly');
-                const store = transaction.objectStore('images');
-                const request = store.getAll();
-
-                request.onsuccess = () => resolve(request.result);
                 request.onerror = () => reject(request.error);
             });
         }
@@ -1605,9 +1873,13 @@
                         resolve(null);
                     }
                 };
+
                 request.onerror = () => reject(request.error);
             });
         }
+        // ===========================================
+        // INACTIVITY CHECK (7+ Days Warning)
+        // ===========================================
 
         async function saveLastActiveDate() {
             await saveSetting('lastActiveDate', new Date().toISOString());
@@ -1615,11 +1887,9 @@
 
         async function checkInactivity() {
             const completedDates = DATES_DATA.dejtovi.filter(d => d.odradjen);
+            if (completedDates.length === 0) return;
 
-            if (completedDates.length === 0) {
-                return;
-            }
-
+            // Find most recent completed date
             const sortedDates = completedDates.sort((a, b) => 
                 new Date(b.datumOdradjivanja) - new Date(a.datumOdradjivanja)
             );
@@ -1637,12 +1907,14 @@
             document.getElementById('warningModal').classList.remove('active');
         }
 
-        // LOGO EVOLUTION
-        async function checkSecretStatus() {
-            const discovered = await getSetting('secretDiscovered');
-            secretDiscovered = discovered === true;
+        // ===========================================
+        // SECRET STATUS (Heart Lock/Unlock)
+        // ===========================================
 
+        async function checkSecretStatus() {
+            secretDiscovered = await getSetting('secretDiscovered') === true;
             const logoEmoji = document.getElementById('logoEmoji');
+
             if (secretDiscovered) {
                 logoEmoji.classList.remove('locked');
             } else {
@@ -1666,12 +1938,97 @@
         }
 
         // ===========================================
-        // EASTER EGG 1: HOLD 3S ON DNEVNI BUTTON
+        // TRACKER FUNCTIONALITY (Shows x/4 Progress)
         // ===========================================
+
+        async function showTracker() {
+            // Count completed easter eggs (exclude internal states like '3_modalOpened')
+            const completedCount = Object.keys(easterEggState)
+                .filter(key => !key.includes('_') && easterEggState[key] === true)
+                .length;
+
+            document.getElementById('trackerProgress').textContent = `${completedCount}/4`;
+
+            // Get random hint for undiscovered easter egg
+            const hint = getRandomHint();
+            if (hint) {
+                document.getElementById('trackerHintTitle').textContent = hint.title;
+                document.getElementById('trackerHintText').textContent = hint.hint;
+                document.getElementById('trackerHintSection').style.display = 'block';
+            } else {
+                // All easter eggs completed
+                document.getElementById('trackerHintSection').style.display = 'none';
+            }
+
+            document.getElementById('trackerModal').classList.add('active');
+        }
+
+        function getRandomHint() {
+            const undiscovered = [];
+
+            // Easter Egg 1: Masaža
+            if (!easterEggState[1]) {
+                undiscovered.push(EASTER_EGG_HINTS[1]);
+            }
+
+            // Easter Egg 2: Doručak
+            if (!easterEggState[2]) {
+                undiscovered.push(EASTER_EGG_HINTS[2]);
+            }
+
+            // Easter Egg 3: Šifra (Progressive hints)
+            if (!easterEggState[3]) {
+                if (!easterEggState['3_modalOpened']) {
+                    // Stage 1: Before opening modal
+                    undiscovered.push(EASTER_EGG_HINTS[3].stage1);
+                } else {
+                    // Stage 2: After opening modal
+                    undiscovered.push(EASTER_EGG_HINTS[3].stage2);
+                }
+            }
+
+            // Easter Egg 4: Math
+            if (!easterEggState[4]) {
+                undiscovered.push(EASTER_EGG_HINTS[4]);
+            }
+
+            if (undiscovered.length === 0) {
+                return null; // All discovered
+            }
+
+            // Return random hint
+            const randomIndex = Math.floor(Math.random() * undiscovered.length);
+            return undiscovered[randomIndex];
+        }
+
+        function closeTracker() {
+            document.getElementById('trackerModal').classList.remove('active');
+        }
+
+        async function completeEasterEgg(id) {
+            easterEggState[id] = true;
+            await saveEasterEggProgress(id, true);
+
+            // Close the modal
+            closeEasterModal('easterModal' + id);
+            if (id === 3) {
+                closeEasterModal('easterModal3Success');
+            }
+            if (id === 4) {
+                closeEasterModal('easterModal4Success');
+            }
+        }
+
+        // ===========================================
+        // EASTER EGG 1: MASAŽA (Hold 3s on Dnevni Button)
+        // ===========================================
+
         function setupEasterEgg1() {
             const dnevniBtn = document.getElementById('dnevniBtn');
 
             dnevniBtn.addEventListener('touchstart', (e) => {
+                if (easterEggState[1]) return; // Already completed
+
                 holdTarget = 'dnevni';
                 dnevniBtn.classList.add('holding');
 
@@ -1679,17 +2036,25 @@
                     dnevniBtn.classList.remove('holding');
                     document.getElementById('easterModal1').classList.add('active');
                     holdTarget = null;
-                }, HOLD_DURATION);
+                }, HOLD_DURATION_3S);
             });
 
             dnevniBtn.addEventListener('touchend', (e) => {
                 if (holdTarget === 'dnevni') {
                     clearTimeout(holdTimer);
                     dnevniBtn.classList.remove('holding');
-                    holdTarget = null;
+
+                    // Only trigger category selection if not holding
+                    setTimeout(() => {
+                        if (holdTarget === null) {
+                            selectCategory('DNEVNI');
+                        }
+                        holdTarget = null;
+                    }, 50);
                 }
             });
 
+            // Fallback for non-touch devices
             dnevniBtn.addEventListener('click', (e) => {
                 if (!holdTarget) {
                     selectCategory('DNEVNI');
@@ -1698,73 +2063,85 @@
         }
 
         // ===========================================
-        // EASTER EGG 2: TAP PATTERN (Logo-Title-Logo-Title)
+        // EASTER EGG 2: DORUČAK (Nav Pattern: Home-Gallery-Stats)
         // ===========================================
+
         function setupEasterEgg2() {
-            const logo = document.getElementById('logoEmoji');
-            const title = document.getElementById('appTitle');
+            function addToNavSequence(element) {
+                if (easterEggState[2]) return; // Already completed
 
-            function addToSequence(element) {
-                tapSequence.push(element);
+                navTapSequence.push(element);
 
-                if (tapSequenceTimer) {
-                    clearTimeout(tapSequenceTimer);
+                // Reset timer
+                if (navTapSequenceTimer) {
+                    clearTimeout(navTapSequenceTimer);
                 }
 
-                tapSequenceTimer = setTimeout(() => {
-                    tapSequence = [];
-                }, 2000);
+                navTapSequenceTimer = setTimeout(() => {
+                    navTapSequence = [];
+                }, 2000); // 2 second window
 
-                if (tapSequence.length === TAP_PATTERN.length) {
+                // Check if pattern matches
+                if (navTapSequence.length === NAV_TAP_PATTERN.length) {
                     let match = true;
-                    for (let i = 0; i < TAP_PATTERN.length; i++) {
-                        if (tapSequence[i] !== TAP_PATTERN[i]) {
+                    for (let i = 0; i < NAV_TAP_PATTERN.length; i++) {
+                        if (navTapSequence[i] !== NAV_TAP_PATTERN[i]) {
                             match = false;
                             break;
                         }
                     }
 
                     if (match) {
-                        tapSequence = [];
+                        navTapSequence = [];
                         document.getElementById('easterModal2').classList.add('active');
                     }
                 }
             }
 
-            logo.addEventListener('click', (e) => {
-                if (tapCount === 0) {
-                    addToSequence('logo');
-                }
-            });
-
-            title.addEventListener('click', (e) => {
-                addToSequence('title');
-            });
+            // Override navClick function to track sequence
+            window.navClick = function(destination) {
+                addToNavSequence(destination);
+                showScreen(destination);
+            };
         }
 
         // ===========================================
-        // EASTER EGG 3: HOLD 3S ON GODIŠNJI + ŠIFRA
+        // EASTER EGG 3: ŠIFRA (Hold 3s on Godišnji + Code 3421)
         // ===========================================
+
         function setupEasterEgg3() {
             const godisnjiBtn = document.getElementById('godisnjiBtn');
 
             godisnjiBtn.addEventListener('touchstart', (e) => {
+                if (easterEggState[3]) return; // Already completed
+
                 holdTarget = 'godisnji';
                 godisnjiBtn.classList.add('holding');
 
-                holdTimer = setTimeout(() => {
+                holdTimer = setTimeout(async () => {
                     godisnjiBtn.classList.remove('holding');
                     document.getElementById('easterModal3').classList.add('active');
                     document.getElementById('secretCodeInput').value = '';
+
+                    // Mark modal as opened (for progressive hints)
+                    easterEggState['3_modalOpened'] = true;
+                    await saveEasterEggProgress('3_modalOpened', true);
+
                     holdTarget = null;
-                }, HOLD_DURATION);
+                }, HOLD_DURATION_3S);
             });
 
             godisnjiBtn.addEventListener('touchend', (e) => {
                 if (holdTarget === 'godisnji') {
                     clearTimeout(holdTimer);
                     godisnjiBtn.classList.remove('holding');
-                    holdTarget = null;
+
+                    setTimeout(() => {
+                        if (holdTarget === null) {
+                            selectCategory('GODIŠNJI');
+                        }
+                        holdTarget = null;
+                    }, 50);
                 }
             });
 
@@ -1778,22 +2155,29 @@
         function checkSecretCode() {
             const input = document.getElementById('secretCodeInput').value;
 
-            if (input === '19091998') {
+            // 1909 (DDMM) + 1512 (DDMM) = 3421
+            if (input === '3421') {
                 document.getElementById('easterModal3').classList.remove('active');
                 document.getElementById('easterModal3Success').classList.add('active');
             } else {
-                alert('❌ Netočna šifra! Pokušaj ponovno.');
+                alert('❌ Netočna šifra! Pokušaj ponovno.\n\nHint: Zbrojite rođendane (DDMM + DDMM)');
                 document.getElementById('secretCodeInput').value = '';
             }
         }
 
         // ===========================================
-        // EASTER EGG 4: HOLD 3S ON STATISTIKA NAV
+        // EASTER EGG 4: MATH (Hold 5s on Statistika Nav)
         // ===========================================
+
         function setupEasterEgg4() {
             const statsNavBtn = document.getElementById('statsNavBtn');
 
             statsNavBtn.addEventListener('touchstart', (e) => {
+                if (easterEggState[4]) {
+                    // Just show stats normally if already completed
+                    return;
+                }
+
                 holdTarget = 'stats';
                 statsNavBtn.classList.add('holding');
 
@@ -1802,14 +2186,20 @@
                     document.getElementById('easterModal4').classList.add('active');
                     document.getElementById('mathAnswerInput').value = '';
                     holdTarget = null;
-                }, HOLD_DURATION);
+                }, HOLD_DURATION_5S); // 5 seconds!
             });
 
             statsNavBtn.addEventListener('touchend', (e) => {
                 if (holdTarget === 'stats') {
                     clearTimeout(holdTimer);
                     statsNavBtn.classList.remove('holding');
-                    holdTarget = null;
+
+                    setTimeout(() => {
+                        if (holdTarget === null) {
+                            showScreen('stats');
+                        }
+                        holdTarget = null;
+                    }, 50);
                 }
             });
 
@@ -1823,9 +2213,10 @@
         function checkMathAnswer() {
             const input = parseInt(document.getElementById('mathAnswerInput').value);
 
+            // System of equations:
             // 2x + y = 10
             // x - y = 2
-            // Rješenje: x = 4, y = 2
+            // Solution: x = 4, y = 2
 
             if (input === 4) {
                 document.getElementById('easterModal4').classList.remove('active');
@@ -1839,10 +2230,10 @@
         function closeEasterModal(modalId) {
             document.getElementById(modalId).classList.remove('active');
         }
+        // ===========================================
+        // DOUBLE TAP LOVE ANIMATION (Logo Easter Egg)
+        // ===========================================
 
-        // ===========================================
-        // LOGO TAP DETECTION (DOUBLE TAP)
-        // ===========================================
         document.getElementById('logoEmoji').addEventListener('click', function() {
             tapCount++;
 
@@ -1852,25 +2243,29 @@
 
             tapTimer = setTimeout(() => {
                 if (tapCount === 2) {
+                    // Double tap - trigger love animation
                     triggerLoveAnimation();
                 } else if (tapCount === 3) {
+                    // Triple tap - reset data
                     triggerReset();
                 }
                 tapCount = 0;
             }, 500);
         });
 
-        // LOVE ANIMATION
         async function triggerLoveAnimation() {
             const overlay = document.getElementById('loveOverlay');
             overlay.classList.add('active');
 
+            // Unlock secret if not already unlocked
             await unlockSecret();
 
+            // Start continuous heart creation
             loveAnimationInterval = setInterval(() => {
                 createFloatingHeart();
             }, 300);
 
+            // Create initial burst
             for (let i = 0; i < 10; i++) {
                 setTimeout(() => createFloatingHeart(), i * 100);
             }
@@ -1883,23 +2278,25 @@
             const hearts = ['💕', '💖', '💗', '💓', '💞', '💝', '❤️', '🩷'];
             heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
 
+            // Random starting position at bottom
             const startX = Math.random() * window.innerWidth;
             const startY = window.innerHeight + 50;
 
             heart.style.left = startX + 'px';
             heart.style.top = startY + 'px';
 
+            // Random float parameters
             const randomX = (Math.random() - 0.5) * 400;
-            heart.style.setProperty('--random-x', randomX + 'px');
-
             const randomRotate = (Math.random() - 0.5) * 720;
-            heart.style.setProperty('--random-rotate', randomRotate + 'deg');
-
             const duration = 6 + Math.random() * 4;
+
+            heart.style.setProperty('--random-x', randomX + 'px');
+            heart.style.setProperty('--random-rotate', randomRotate + 'deg');
             heart.style.animationDuration = duration + 's';
 
             document.getElementById('loveOverlay').appendChild(heart);
 
+            // Remove after animation
             setTimeout(() => {
                 if (heart.parentNode) {
                     heart.remove();
@@ -1908,17 +2305,23 @@
         }
 
         function closeLoveAnimation() {
-            const overlay = document.getElementById('loveOverlay');
-            overlay.classList.remove('active');
+            document.getElementById('loveOverlay').classList.remove('active');
 
+            // Stop creating new hearts
             if (loveAnimationInterval) {
                 clearInterval(loveAnimationInterval);
                 loveAnimationInterval = null;
             }
 
-            const hearts = document.querySelectorAll('.floating-heart');
-            hearts.forEach(heart => heart.remove());
+            // Remove existing hearts
+            document.querySelectorAll('.floating-heart').forEach(heart => {
+                heart.remove();
+            });
         }
+
+        // ===========================================
+        // TRIPLE TAP RESET (Debug Feature)
+        // ===========================================
 
         function triggerReset() {
             if (confirm('🔄 SECRET RESET\n\nOvo će obrisati sve podatke i slike!\n\nKoristiti samo za testiranje.\n\nSigurno želiš nastaviti?')) {
@@ -1931,16 +2334,14 @@
         async function resetAllData() {
             if (!db) await initDB();
 
-            const transaction = db.transaction(['dates', 'images', 'settings'], 'readwrite');
+            const transaction = db.transaction(['dates', 'images', 'settings', 'easterEggs'], 'readwrite');
 
-            const datesStore = transaction.objectStore('dates');
-            const imagesStore = transaction.objectStore('images');
-            const settingsStore = transaction.objectStore('settings');
+            transaction.objectStore('dates').clear();
+            transaction.objectStore('images').clear();
+            transaction.objectStore('settings').clear();
+            transaction.objectStore('easterEggs').clear();
 
-            datesStore.clear();
-            imagesStore.clear();
-            settingsStore.clear();
-
+            // Reset in-memory data
             DATES_DATA.dejtovi.forEach(date => {
                 date.odradjen = false;
                 date.datumOdradjivanja = null;
@@ -1953,12 +2354,20 @@
             };
         }
 
-        // NAVIGATION
+        // ===========================================
+        // SCREEN NAVIGATION
+        // ===========================================
+
         function showScreen(screen) {
             currentScreen = screen;
+
+            // Hide all screens
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+
+            // Remove active state from all nav buttons
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
 
+            // Show selected screen and activate nav button
             if (screen === 'home') {
                 document.getElementById('homeScreen').classList.add('active');
                 document.querySelector('.nav-btn:nth-child(1)').classList.add('active');
@@ -1979,7 +2388,10 @@
             showScreen('home');
         }
 
-        // CATEGORY SELECTION
+        // ===========================================
+        // DATE SELECTION AND MANAGEMENT
+        // ===========================================
+
         function selectCategory(category) {
             currentCategory = category;
             loadRandomDate();
@@ -1996,13 +2408,17 @@
                 return;
             }
 
-            const randomIndex = Math.floor(Math.random() * availableDates.length);
-            currentDate = availableDates[randomIndex];
+            // Pick random date
+            currentDate = availableDates[Math.floor(Math.random() * availableDates.length)];
 
+            // Display date
             document.getElementById('dateTitle').textContent = currentDate.naziv;
             document.getElementById('dateDescription').textContent = currentDate.opis;
+
+            // Reset flip card
             document.getElementById('flipCard').classList.remove('flipped');
 
+            // Show date screen
             document.getElementById('dateScreen').classList.add('active');
             document.getElementById('homeScreen').classList.remove('active');
         }
@@ -2012,15 +2428,20 @@
         }
 
         function acceptDate() {
+            // Move to upload screen
             document.getElementById('dateScreen').classList.remove('active');
             document.getElementById('uploadScreen').classList.add('active');
         }
 
         function replaceDate() {
+            // Get a new random date
             loadRandomDate();
         }
 
-        // IMAGE UPLOAD
+        // ===========================================
+        // IMAGE UPLOAD FUNCTIONALITY
+        // ===========================================
+
         function openCamera() {
             document.getElementById('cameraInput').click();
         }
@@ -2037,8 +2458,7 @@
 
             const reader = new FileReader();
             reader.onload = (e) => {
-                const previewContainer = document.getElementById('previewContainer');
-                previewContainer.innerHTML = `
+                document.getElementById('previewContainer').innerHTML = `
                     <img src="${e.target.result}" class="preview-image">
                     <button class="btn btn-accept" style="width: 100%; margin-top: 20px;" onclick="confirmUpload()">
                         Potvrdi i Spremi
@@ -2051,14 +2471,17 @@
         async function confirmUpload() {
             if (!selectedImage || !currentDate) return;
 
+            // Mark date as completed
             currentDate.odradjen = true;
             currentDate.datumOdradjivanja = new Date().toISOString();
             currentDate.slikaPath = `date_${currentDate.id}`;
 
+            // Save to IndexedDB
             await saveDate(currentDate);
             await saveImage(currentDate.id, selectedImage);
             await saveLastActiveDate();
 
+            // Reset state
             selectedImage = null;
             document.getElementById('previewContainer').innerHTML = '';
             document.getElementById('cameraInput').value = '';
@@ -2073,13 +2496,19 @@
             document.getElementById('previewContainer').innerHTML = '';
             document.getElementById('cameraInput').value = '';
             document.getElementById('galleryInput').value = '';
+
+            // Go back to date screen
             document.getElementById('uploadScreen').classList.remove('active');
             document.getElementById('dateScreen').classList.add('active');
         }
 
-        // GALLERY
+        // ===========================================
+        // GALLERY FUNCTIONALITY
+        // ===========================================
+
         async function loadGallery() {
-            const completedDates = DATES_DATA.dejtovi.filter(d => d.odradjen)
+            const completedDates = DATES_DATA.dejtovi
+                .filter(d => d.odradjen)
                 .sort((a, b) => new Date(b.datumOdradjivanja) - new Date(a.datumOdradjivanja));
 
             const galleryGrid = document.getElementById('galleryGrid');
@@ -2098,8 +2527,7 @@
                 const imageBlob = await getImage(date.id);
                 if (imageBlob) {
                     const imageUrl = URL.createObjectURL(imageBlob);
-                    const dateObj = new Date(date.datumOdradjivanja);
-                    const formattedDate = dateObj.toLocaleDateString('hr-HR');
+                    const formattedDate = new Date(date.datumOdradjivanja).toLocaleDateString('hr-HR');
 
                     const item = document.createElement('div');
                     item.className = 'gallery-item';
@@ -2110,6 +2538,7 @@
                         </div>
                     `;
                     item.onclick = () => showFullscreen(imageUrl);
+
                     galleryGrid.appendChild(item);
                 }
             }
@@ -2124,22 +2553,28 @@
             document.getElementById('fullscreenOverlay').classList.remove('active');
         }
 
-        // STATS
+        // ===========================================
+        // STATISTICS FUNCTIONALITY
+        // ===========================================
+
         function loadStats() {
             const completed = DATES_DATA.dejtovi.filter(d => d.odradjen);
-            const dnevni = completed.filter(d => d.kategorija === 'DNEVNI').length;
-            const vikend = completed.filter(d => d.kategorija === 'VIKEND').length;
-            const mjesecni = completed.filter(d => d.kategorija === 'MJESEČNI').length;
-            const godisnji = completed.filter(d => d.kategorija === 'GODIŠNJI').length;
 
             document.getElementById('totalCompleted').textContent = completed.length;
-            document.getElementById('dnevniCompleted').textContent = dnevni;
-            document.getElementById('vikendCompleted').textContent = vikend;
-            document.getElementById('mjesecniCompleted').textContent = mjesecni;
-            document.getElementById('godisnjiCompleted').textContent = godisnji;
+            document.getElementById('dnevniCompleted').textContent = 
+                completed.filter(d => d.kategorija === 'DNEVNI').length;
+            document.getElementById('vikendCompleted').textContent = 
+                completed.filter(d => d.kategorija === 'VIKEND').length;
+            document.getElementById('mjesecniCompleted').textContent = 
+                completed.filter(d => d.kategorija === 'MJESEČNI').length;
+            document.getElementById('godisnjiCompleted').textContent = 
+                completed.filter(d => d.kategorija === 'GODIŠNJI').length;
         }
-
-        // EXPORT
+        
+        // ===========================================
+        // EXPORT FUNCTIONALITY
+        // ===========================================
+        
         function exportJSON() {
             const exportData = {
                 exportDate: new Date().toISOString(),
@@ -2152,11 +2587,11 @@
                     datumOdradjivanja: d.datumOdradjivanja
                 }))
             };
-
+            
             const dataStr = JSON.stringify(exportData, null, 2);
             const dataBlob = new Blob([dataStr], { type: 'application/json' });
             const url = URL.createObjectURL(dataBlob);
-
+            
             const a = document.createElement('a');
             a.href = url;
             a.download = `our-dates-backup-${new Date().toISOString().split('T')[0]}.json`;
@@ -2168,14 +2603,14 @@
 
         async function exportZIP() {
             const completedDates = DATES_DATA.dejtovi.filter(d => d.odradjen);
-
+            
             if (completedDates.length === 0) {
                 alert('Nema slika za export!');
                 return;
             }
-
+            
             const zip = new JSZip();
-
+            
             for (const date of completedDates) {
                 const imageBlob = await getImage(date.id);
                 if (imageBlob) {
@@ -2184,10 +2619,10 @@
                     zip.file(filename, imageBlob);
                 }
             }
-
+            
             const zipBlob = await zip.generateAsync({ type: 'blob' });
             const url = URL.createObjectURL(zipBlob);
-
+            
             const a = document.createElement('a');
             a.href = url;
             a.download = `our-dates-images-${new Date().toISOString().split('T')[0]}.zip`;
@@ -2197,30 +2632,44 @@
             URL.revokeObjectURL(url);
         }
 
-        // INIT
+        // ===========================================
+        // INITIALIZATION
+        // ===========================================
+        
         window.addEventListener('load', async () => {
+            // Initialize database
             await initDB();
+            
+            // Load saved state
             await loadState();
+            await loadEasterEggState();
+            
+            // Check secret and inactivity
             await checkSecretStatus();
             await checkInactivity();
             await saveLastActiveDate();
-
+            
             // Setup Easter Eggs
-            setupEasterEgg1();
-            setupEasterEgg2();
-            setupEasterEgg3();
-            setupEasterEgg4();
-
-            console.log('App loaded with Easter Eggs! 🎉');
+            setupEasterEgg1(); // Hold 3s Dnevni
+            setupEasterEgg2(); // Nav pattern Home-Gallery-Stats
+            setupEasterEgg3(); // Hold 3s Godišnji
+            setupEasterEgg4(); // Hold 5s Statistika
+            
+            // Show tracker modal on load
+            await showTracker();
+            
+            console.log('🎉 App loaded with Tracker + Easter Eggs!');
         });
 
-        // SERVICE WORKER
+        // Service Worker Registration
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('service-worker.js')
                 .then(reg => console.log('Service Worker registered'))
                 .catch(err => console.log('Service Worker registration failed', err));
         }
     </script>
+    
+    <!-- JSZip Library for ZIP Export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </body>
 </html>
