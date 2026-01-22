@@ -2,11 +2,12 @@
   "name": "Our Dates",
   "short_name": "Dates",
   "description": "Date tracker app for couples",
-  "start_url": "/",
+  "start_url": "https://josiplevar.github.io/Valentinovoapp/",
   "display": "standalone",
   "background_color": "#ffeef8",
   "theme_color": "#E63946",
   "orientation": "portrait",
+  "scope": "/Valentinovoapp/",
   "icons": [
     {
       "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='80'>❤️</text></svg>",
