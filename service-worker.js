@@ -1,7 +1,9 @@
-const CACHE_NAME = 'our-dates-v1';
+const CACHE_NAME = 'our-dates-v2';
+const BASE_URL = 'https://josiplevar.github.io/Valentinovoapp/';
 const urlsToCache = [
-  '/',
-  '/index.html',
+  BASE_URL,
+  BASE_URL + 'index.html',
+  BASE_URL + 'manifest.json',
   'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js'
 ];
 
@@ -13,6 +15,7 @@ self.addEventListener('install', event => {
         return cache.addAll(urlsToCache);
       })
   );
+  self.skipWaiting();
 });
 
 self.addEventListener('fetch', event => {
@@ -22,9 +25,20 @@ self.addEventListener('fetch', event => {
         if (response) {
           return response;
         }
-        return fetch(event.request);
-      }
-    )
+        return fetch(event.request).then(
+          function(response) {
+            if(!response || response.status !== 200 || response.type !== 'basic') {
+              return response;
+            }
+            var responseToCache = response.clone();
+            caches.open(CACHE_NAME)
+              .then(function(cache) {
+                cache.put(event.request, responseToCache);
+              });
+            return response;
+          }
+        );
+      })
   );
 });
 
@@ -41,4 +55,5 @@ self.addEventListener('activate', event => {
       );
     })
   );
+  return self.clients.claim();
 });
