@@ -1073,7 +1073,7 @@
             <span class="nav-icon">📷</span>
             <span>Galerija</span>
         </button>
-        <button class="nav-btn" id="statsNavBtn">
+        <button class="nav-btn" id="statsNavBtn" onclick="navClick('stats')">
             <span class="nav-icon">📊</span>
             <span>Statistika</span>
         </button>
@@ -2160,7 +2160,7 @@
                 document.getElementById('easterModal3').classList.remove('active');
                 document.getElementById('easterModal3Success').classList.add('active');
             } else {
-                alert('❌ Netočna šifra! Pokušaj ponovno.\n\nHint: Zbrojite rođendane (DDMM + DDMM)');
+                alert('❌ Netočna šifra! Pokušaj ponovno.);
                 document.getElementById('secretCodeInput').value = '';
             }
         }
