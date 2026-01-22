@@ -684,7 +684,7 @@
         
         let easterEggState = {1: false, 2: false, 3: false, 4: false, '3_modalOpened': false};
         let tapCount = 0, tapTimer = null, navTapSequence = [], navTapSequenceTimer = null;
-        let holdTimer = null, holdTarget = null, loveAnimationInterval = null;
+        let loveAnimationInterval = null;
         const NAV_TAP_PATTERN = ['home', 'gallery', 'stats'], HOLD_DURATION_3S = 3000, HOLD_DURATION_5S = 5000;
 
         let db;
@@ -1121,49 +1121,183 @@
             if (id === 4) closeEasterModal('easterModal4Success');
         }
 
-        // FIX #1: DODANI EVENT LISTENERI ZA SVE BUTTONE
+        // ===========================================
+        // FIX: BUTTON EVENT HANDLERS - iOS Safari compatible
+        // ===========================================
+        
+        // Globalne varijable za hold tracking
+        let holdTimer = null;
+        let holdTarget = null;
+        let isHolding = false;
+        
         function setupEasterEgg1() {
             const dnevniBtn = document.getElementById('dnevniBtn');
+            
+            // Touch events za hold (3 sekunde)
             dnevniBtn.addEventListener('touchstart', (e) => {
                 if (easterEggState[1]) return;
+                
+                isHolding = true;
                 holdTarget = 'dnevni';
                 dnevniBtn.classList.add('holding');
+                
                 holdTimer = setTimeout(() => {
                     dnevniBtn.classList.remove('holding');
                     document.getElementById('easterModal1').classList.add('active');
+                    isHolding = false;
                     holdTarget = null;
                 }, HOLD_DURATION_3S);
-            });
+            }, {passive: true});
+            
             dnevniBtn.addEventListener('touchend', (e) => {
                 if (holdTarget === 'dnevni') {
                     clearTimeout(holdTimer);
                     dnevniBtn.classList.remove('holding');
-                    setTimeout(() => { 
-                        if (holdTarget === null && !dnevniBtn.disabled) selectCategory('DNEVNI'); 
-                        holdTarget = null; 
-                    }, 50);
+                    
+                    const wasHolding = isHolding;
+                    isHolding = false;
+                    holdTarget = null;
+                    
+                    // Ako nije bio hold, trigeruj normalan click
+                    if (wasHolding && !dnevniBtn.disabled) {
+                        setTimeout(() => selectCategory('DNEVNI'), 100);
+                    }
+                }
+            }, {passive: true});
+            
+            // Fallback za desktop (mouse click)
+            dnevniBtn.addEventListener('click', (e) => {
+                if (!isHolding && !dnevniBtn.disabled) {
+                    selectCategory('DNEVNI');
                 }
             });
-            dnevniBtn.addEventListener('click', (e) => { 
-                if (!holdTarget && !dnevniBtn.disabled) selectCategory('DNEVNI'); 
-            });
         }
-
-        // FIX #1: Event listeneri za VIKEND
+        
+        // FIX #1: VIKEND button - jednostavan click
         function setupVikendButton() {
             const vikendBtn = document.getElementById('vikendBtn');
+            
+            // Touch za mobile
+            vikendBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                if (!vikendBtn.disabled) {
+                    selectCategory('VIKEND');
+                }
+            });
+            
+            // Click za desktop
             vikendBtn.addEventListener('click', (e) => {
-                if (!vikendBtn.disabled) selectCategory('VIKEND');
+                if (!vikendBtn.disabled) {
+                    selectCategory('VIKEND');
+                }
             });
         }
-
-        // FIX #1: Event listeneri za MJESEČNI
+        
+        // FIX #1: MJESEČNI button - jednostavan click
         function setupMjesecniButton() {
             const mjesecniBtn = document.getElementById('mjesecniBtn');
+            
+            // Touch za mobile
+            mjesecniBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                if (!mjesecniBtn.disabled) {
+                    selectCategory('MJESEČNI');
+                }
+            });
+            
+            // Click za desktop
             mjesecniBtn.addEventListener('click', (e) => {
-                if (!mjesecniBtn.disabled) selectCategory('MJESEČNI');
+                if (!mjesecniBtn.disabled) {
+                    selectCategory('MJESEČNI');
+                }
             });
         }
+        
+        function setupEasterEgg3() {
+            const godisnjiBtn = document.getElementById('godisnjiBtn');
+            
+            // Touch events za hold (3 sekunde)
+            godisnjiBtn.addEventListener('touchstart', (e) => {
+                if (easterEggState[3]) return;
+                
+                isHolding = true;
+                holdTarget = 'godisnji';
+                godisnjiBtn.classList.add('holding');
+                
+                holdTimer = setTimeout(async () => {
+                    godisnjiBtn.classList.remove('holding');
+                    document.getElementById('easterModal3').classList.add('active');
+                    document.getElementById('secretCodeInput').value = '';
+                    easterEggState['3_modalOpened'] = true;
+                    await saveEasterEggProgress('3_modalOpened', true);
+                    isHolding = false;
+                    holdTarget = null;
+                }, HOLD_DURATION_3S);
+            }, {passive: true});
+            
+            godisnjiBtn.addEventListener('touchend', (e) => {
+                if (holdTarget === 'godisnji') {
+                    clearTimeout(holdTimer);
+                    godisnjiBtn.classList.remove('holding');
+                    
+                    const wasHolding = isHolding;
+                    isHolding = false;
+                    holdTarget = null;
+                    
+                    // Ako nije bio hold, trigeruj normalan click
+                    if (wasHolding && !godisnjiBtn.disabled) {
+                        setTimeout(() => selectCategory('GODIŠNJI'), 100);
+                    }
+                }
+            }, {passive: true});
+            
+            // Fallback za desktop (mouse click)
+            godisnjiBtn.addEventListener('click', (e) => {
+                if (!isHolding && !godisnjiBtn.disabled) {
+                    selectCategory('GODIŠNJI');
+                }
+            });
+        }
+        
+        function setupEasterEgg4() {
+            const statsNavBtn = document.getElementById('statsNavBtn');
+            let statsHolding = false;
+            
+            statsNavBtn.addEventListener('touchstart', (e) => {
+                if (easterEggState[4]) return;
+                
+                statsHolding = true;
+                holdTarget = 'stats';
+                statsNavBtn.classList.add('holding');
+                
+                holdTimer = setTimeout(() => {
+                    statsNavBtn.classList.remove('holding');
+                    document.getElementById('easterModal4').classList.add('active');
+                    document.getElementById('mathAnswerInput').value = '';
+                    statsHolding = false;
+                    holdTarget = null;
+                }, HOLD_DURATION_5S);
+            }, {passive: true});
+            
+            statsNavBtn.addEventListener('touchend', (e) => {
+                if (holdTarget === 'stats') {
+                    clearTimeout(holdTimer);
+                    statsNavBtn.classList.remove('holding');
+                    
+                    const wasHolding = statsHolding;
+                    statsHolding = false;
+                    holdTarget = null;
+                    
+                    // Ako nije bio hold, trigeruj normalan navigation
+                    if (wasHolding) {
+                        setTimeout(() => showScreen('stats'), 100);
+                    }
+                }
+            }, {passive: true});
+            
+            // Fallback za desktop (mouse click) - već ima u navClick
+        }
+
 
         function setupEasterEgg2() {
             function addToNavSequence(element) {
